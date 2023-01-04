@@ -1,0 +1,1 @@
+To run the application we need to run the hotel.py file 
