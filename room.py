@@ -5,7 +5,7 @@ import random
 # pip install mysql-connector-python
 import mysql.connector
 from tkinter import messagebox
-from time import strftime
+from time import strptime
 from datetime import datetime
 
 
@@ -15,6 +15,7 @@ class Room_Booking:
         self.root.title("ROOM BOOKING")
         self.root.geometry("1360x525+0+185")
 
+        self.pwd="Nancy2403@"
 
         # adding variables
         self.var_contact=StringVar()
@@ -102,40 +103,44 @@ class Room_Booking:
         combo_room_type.place(x=180,y=40,width=150)
 
         # Available room COMBOBOX
-        # label_room_no=Label(frame1,text="Available room",font=("arial",10,"bold"),padx=2,pady=4)
-        # label_room_no.place(x=370,y=40,width=150)
+        label_room_no=Label(frame1,text="Available room",font=("arial",10,"bold"),padx=2,pady=4)
+        label_room_no.place(x=370,y=40,width=150)
 
-        # combo_room_no=ttk.Combobox(frame1,font=("arial",14),width=20,state="readonly",textvariable=self.var_roomavailable)
-        # combo_room_no["value"]=("Male","Female","Others")
+        conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
+        my_cursor=conn.cursor()
+        my_cursor.execute("select Room_No from roomdetails")
+        rows = my_cursor.fetchall()
+        combo_room_no=ttk.Combobox(frame1,font=("arial",14),width=20,state="readonly",textvariable=self.var_roomavailable)
+        combo_room_no["value"]=rows
         # combo_room_no.current(0)
-        # combo_room_no.place(x=540,y=40,width=150)
+        combo_room_no.place(x=540,y=40,width=150)
 
-          # Paid Tax
-        lbl_availroom=Label(frame1,text="Available Room",font=("arial",10,"bold"),padx=2,pady=4)
-        lbl_availroom.place(x=370,y=40,width=150)
+        #   # availablr room Tax
+        # lbl_availroom=Label(frame1,text="Available Room",font=("arial",10,"bold"),padx=2,pady=4)
+        # lbl_availroom.place(x=370,y=40,width=150)
 
-        entry_avail_room=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_roomavailable)
-        entry_avail_room.place(x=540,y=40,width=150)
+        # entry_avail_room=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_roomavailable)
+        # entry_avail_room.place(x=540,y=40,width=150)
 
 
-        # # Meal COMBOBOX
-        # label_room_no=Label(frame1,text="Meal",font=("arial",10,"bold"),padx=2,pady=4)
-        # label_room_no.place(x=730,y=40,width=150)
+        # Meal COMBOBOX
+        label_room_no=Label(frame1,text="Meal",font=("arial",10,"bold"),padx=2,pady=4)
+        label_room_no.place(x=730,y=40,width=150)
 
-        # combo_room_no=ttk.Combobox(frame1,font=("arial",14),width=20,state="readonly",textvariable=self.var_meal)
-        # combo_room_no["value"]=("Male","Female","Others")
-        # combo_room_no.current(0)
-        # combo_room_no.place(x=890,y=40,width=150)
+        combo_room_no=ttk.Combobox(frame1,font=("arial",14),width=20,state="readonly",textvariable=self.var_meal)
+        combo_room_no["value"]=("Veg","Non-Veg","Both")
+        combo_room_no.current(0)
+        combo_room_no.place(x=890,y=40,width=150)
 
-          # Meal
-        lbl_meal=Label(frame1,text="Meal",font=("arial",10,"bold"),padx=2,pady=4)
-        lbl_meal.place(x=730,y=40,width=150)
+        #   # Meal
+        # lbl_meal=Label(frame1,text="Meal",font=("arial",10,"bold"),padx=2,pady=4)
+        # lbl_meal.place(x=730,y=40,width=150)
 
-        entry_lbl_meal=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_meal)
-        entry_lbl_meal.place(x=890,y=40,width=150)
+        # entry_lbl_meal=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_meal)
+        # entry_lbl_meal.place(x=890,y=40,width=150)
 
          # No of days
-        lbl_total_days=Label(frame1,text="total Days",font=("arial",10,"bold"),padx=2,pady=4)
+        lbl_total_days=Label(frame1,text="Total Days",font=("arial",10,"bold"),padx=2,pady=4)
         lbl_total_days.place(x=10,y=80,width=150)
 
         entry_total_days=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_no_of_days)
@@ -158,7 +163,7 @@ class Room_Booking:
         entry_actual_cost.place(x=890,y=80,width=150)
 
          # Total Cost
-        lbl_total_cost=Label(frame1,text="Actual Cost",font=("arial",10,"bold"),padx=2,pady=4)
+        lbl_total_cost=Label(frame1,text="Total Cost",font=("arial",10,"bold"),padx=2,pady=4)
         lbl_total_cost.place(x=10,y=120,width=150)
 
         entry_total_cost=ttk.Entry(frame1,font=("arial",14),textvariable=self.var_total_bill)
@@ -169,7 +174,7 @@ class Room_Booking:
         btn_frame.place(x=20,y=160,width=1050,height=40)
 
         
-        btnBill=Button(btn_frame,text="Bill",font=("arial",10,"bold"),bg="black",fg="gold",width=15)
+        btnBill=Button(btn_frame,text="Bill",command=self.total_amount,font=("arial",10,"bold"),bg="black",fg="gold",width=15)
         btnBill.place(x=90,y=3,width=150)
 
         btnAdd=Button(btn_frame,text="Save",command=self.add_data,font=("arial",10,"bold"),bg="black",fg="gold",width=15)
@@ -253,7 +258,7 @@ class Room_Booking:
         messagebox.showerror("Error","All fields are required",parent=self.root)
       else:
         try:
-            conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+            conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
             my_cursor=conn.cursor()
             my_cursor.execute("insert into customerroom values(%s,%s,%s,%s,%s,%s,%s)",(self.var_contact.get(),
             self.var_checkin.get(),
@@ -270,7 +275,7 @@ class Room_Booking:
           messagebox.showerror("Warning","some thing went wrong",parent=self.root)
 
     def fetch_data(self):
-        conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+        conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
         my_cursor=conn.cursor()
         my_cursor.execute("select * from customerroom")
         rows = my_cursor.fetchall()
@@ -286,7 +291,7 @@ class Room_Booking:
             if self.var_contact.get() == "":
                 messagebox.showerror("Error","Please Enter Your Contact Number",parent=self.root)
             else:
-                conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                 my_cursor=conn.cursor()
                 query=("select Name from customerdetails where Mobile=%s")
                 value=(self.var_contact.get(),)
@@ -311,7 +316,7 @@ class Room_Booking:
                     lbl_name1=Label(text_frame,text=row,font=("arial",8,"bold"),padx=2,pady=4)
                     lbl_name1.place(x=80,y=10)
 
-                    conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                    conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                     my_cursor=conn.cursor()
                     query=("select Email from customerdetails where Mobile=%s")
                     value=(self.var_contact.get(),)
@@ -328,7 +333,7 @@ class Room_Booking:
                     conn.commit()
                     conn.close()
 
-                    conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                    conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                     my_cursor=conn.cursor()
                     query=("select Idproof from customerdetails where Mobile=%s")
                     value=(self.var_contact.get(),)
@@ -346,7 +351,7 @@ class Room_Booking:
                     conn.close()
 
                     # Refrence Number
-                    conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                    conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                     my_cursor=conn.cursor()
                     query=("select Ref from customerdetails where Mobile=%s")
                     value=(self.var_contact.get(),)
@@ -364,7 +369,7 @@ class Room_Booking:
                     conn.close()
 
                     # Address Number
-                    conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                    conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                     my_cursor=conn.cursor()
                     query=("select Address from customerdetails where Mobile=%s")
                     value=(self.var_contact.get(),)
@@ -383,7 +388,7 @@ class Room_Booking:
 
 
                      # Id Number
-                    conn=mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+                    conn=mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
                     my_cursor=conn.cursor()
                     query=("select Idnumber from customerdetails where Mobile=%s")
                     value=(self.var_contact.get(),)
@@ -417,7 +422,7 @@ class Room_Booking:
       if self.var_contact=="" or self.var_checkin=="":
         messagebox.showerror("Error","please enter valid details",parent=self.root)
       else:
-        conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+        conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
         my_cursor=conn.cursor()
         my_cursor.execute("update customerroom set Check_in=%s,Check_out=%s,Roomtype=%s,Roomavailable=%s,Meal=%s,No_of_days=%s where Contact=%s",(
             self.var_checkin.get(),
@@ -434,7 +439,7 @@ class Room_Booking:
     def delete(self):
       delitem = messagebox.askyesno("Question","Do you want to delete this customer",parent=self.root)
       if delitem>0:
-        conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+        conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
         my_cursor=conn.cursor()
         my_cursor.execute("delete from customerroom where Contact=%s",(self.var_contact.get(),))
        
@@ -460,7 +465,7 @@ class Room_Booking:
       self.var_total_bill.set("")
 
     def search(self):
-      conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+      conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
       my_cursor=conn.cursor()
       my_cursor.execute("select * from customerroom where "+str(self.var_search.get())+" LIKE'%"+str(self.text_search.get())+"%'")
       rows=my_cursor.fetchall()
@@ -470,6 +475,106 @@ class Room_Booking:
           self.Room_Details_Table.insert("",END,values=i)
       conn.commit()
       conn.close()
+
+    def  total_amount(self):
+      indate = self.var_checkin.get()
+      outdate = self.var_checkout.get()
+      indate = datetime.strptime(indate,"%d/%m/%Y")
+      outdate = datetime.strptime(outdate,"%d/%m/%Y")
+      self.var_no_of_days.set(abs(outdate-indate).days)
+
+      if(self.var_meal.get() == "Veg" and self.var_roomtype.get() == "Single"):
+        self.one_day = 799
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.35)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Veg" and self.var_roomtype.get() == "Double"):
+        self.one_day = 899
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.36)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Veg" and self.var_roomtype.get() == "Luxury"):
+        self.one_day = 1200
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.38)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Non-Veg" and self.var_roomtype.get() == "Single"):
+        self.one_day = 999
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.38)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Non-Veg" and self.var_roomtype.get() == "Double"):
+        self.one_day = 1199
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.36)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Non-Veg" and self.var_roomtype.get() == "Luxury"):
+        self.one_day = 1299
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.38)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Both" and self.var_roomtype.get() == "Single"):
+        self.one_day = 1299
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.38)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+      
+      elif(self.var_meal.get() == "Both" and self.var_roomtype.get() == "Double"):
+        self.one_day = 1399
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.38)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      elif(self.var_meal.get() == "Both" and self.var_roomtype.get() == "Luxury"):
+        self.one_day = 1499
+        self.sub_price= self.one_day * int(self.var_no_of_days.get())
+        self.tax_paid = float(self.sub_price * 0.39)
+        self.total_price = int(self.sub_price) + int(self.tax_paid)
+        self.var_paid_tax.set(str(self.tax_paid))
+        self.var_actual_bill.set(str(self.sub_price))
+        self.var_total_bill.set(str(self.total_price))
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
 
       
 

@@ -12,8 +12,8 @@ class Customer_Details:
         self.root=root
         self.root.title("Customer Details")
         self.root.geometry("1360x525+0+185")
-
         self.pwd="Nancy2403@"
+
     # creating variables
         self.var_ref=StringVar()
         x= random.randint(1000,9999)
@@ -245,7 +245,7 @@ class Customer_Details:
         messagebox.showerror("Error","All fields are required",parent=self.root)
       else:
         try:
-            conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+            conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
             my_cursor=conn.cursor()
             my_cursor.execute("insert into customerdetails values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.var_ref.get(),
               self.var_cust_name.get(),self.var_mother.get(),self.var_gender.get(),self.var_post.get(),self.var_mobile.get(),
@@ -291,7 +291,7 @@ class Customer_Details:
       if self.var_id_proof=="" or self.var_cust_name=="":
         messagebox.showerror("Error","please enter valid details",parent=self.root)
       else:
-         conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+         conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
          my_cursor=conn.cursor()
          my_cursor.execute("update customerdetails set Name=%s,Mother=%s,Gender=%s,PostCode=%s,Mobile=%s,Email=%s,Nationality=%s,Idproof=%s,Idnumber=%s,Address=%s where Ref=%s",(
               self.var_cust_name.get(),self.var_mother.get(),self.var_gender.get(),self.var_post.get(),self.var_mobile.get(),
@@ -299,12 +299,12 @@ class Customer_Details:
          conn.commit()
          self.fetch_data()
          conn.close()
-         messagebox.showinfo("Update","Customer Details has benn updated")
+         messagebox.showinfo("Update","Customer Details has benn updated",parent=self.root)
 
     def delete(self):
       delitem = messagebox.askyesno("Question","Do you want to delete this customer",parent=self.root)
       if delitem>0:
-        conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+        conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
         my_cursor=conn.cursor()
         my_cursor.execute("delete from customerdetails where Ref=%s",(self.var_ref.get(),))
        
@@ -332,7 +332,7 @@ class Customer_Details:
       self.var_ref.set(str(x))
 
     def search(self):
-      conn = mysql.connector.connect(host="localhost",username="root",password="Nancy2403@",database="hotel-managment-system")
+      conn = mysql.connector.connect(host="localhost",username="root",password=self.pwd,database="hotel-managment-system")
       my_cursor=conn.cursor()
       my_cursor.execute("select * from customerdetails where "+str(self.var_search.get())+" LIKE'%"+str(self.text_search.get())+"%'")
       rows=my_cursor.fetchall()

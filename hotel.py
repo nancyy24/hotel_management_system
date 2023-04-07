@@ -2,13 +2,15 @@ from tkinter import *
 from PIL import Image,ImageTk 
 from customerDetails import Customer_Details
 from room import Room_Booking 
-
+from room_details import Room_Details
+from about_us import About_Us
 # homepage
 class HotelManagementSystem():
     def __init__(self,root):
         self.root=root
         self.root.title("Hotel Management System")
         self.root.geometry("1360x750")
+
 
         # logo
         img1=Image.open("Images\logo.jpg")
@@ -17,9 +19,8 @@ class HotelManagementSystem():
 
         lblimg = Label(self.root,image=self.photoimg1,bd=4,relief=RIDGE)
         lblimg.place(x=0,y=0,width=200,height=100)
-
         # title
-        lbl_title = Label(self.root,text="Hotel Manangement Application",font=("Helvetica",40,"bold"),bg="light slate gray",fg="black",bd=4,relief=SOLID)
+        lbl_title = Label(self.root,text="ROYAL HOTEL MANAGEMENT SYSTEM",font=("Helvetica",30,"bold"),bg="light slate gray",fg="black",bd=4,relief=SOLID)
         lbl_title.place(x=200,y=0,width=1160,height=100)
 
         # creating frame
@@ -31,20 +32,20 @@ class HotelManagementSystem():
         btn_frame.place(x=0,y=0,width=1350,height=50)
 
         # creating buttons
-        customer_btn= Button(btn_frame,text="CUSTOMER DETAILS",command=self.customer_details_system,width=22,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
+        customer_btn= Button(btn_frame,text="CUSTOMER DETAILS",command=self.customer_details_system,width=26,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
         customer_btn.place(x=0,y=0,height=40)
 
-        customer_btn= Button(btn_frame,text="ROOM BOOKING",command=self.room_booking,width=22,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
-        customer_btn.place(x=280,y=0,height=40)
+        customer_btn= Button(btn_frame,text="ROOM BOOKING",command=self.room_booking,width=26,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
+        customer_btn.place(x=330,y=0,height=40)
 
-        customer_btn= Button(btn_frame,text="ROOM DETAILS",width=22,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
-        customer_btn.place(x=560,y=0,height=40)
+        customer_btn= Button(btn_frame,text="ROOM DETAILS",command=self.all_room_details,width=27,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
+        customer_btn.place(x=660,y=0,height=40)
 
-        customer_btn= Button(btn_frame,text="ABOUT US",width=22,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
-        customer_btn.place(x=840,y=0,height=40)
+        customer_btn= Button(btn_frame,text="ABOUT US",command=self.about_us_page,width=27,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
+        customer_btn.place(x=1000,y=0,height=40)
 
-        customer_btn= Button(btn_frame,text="LOG OUT",width=17,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
-        customer_btn.place(x=1120,y=0,height=40)
+        # customer_btn= Button(btn_frame,text="LOG OUT",width=17,font=("Helvetica",14,"bold"),bg="light grey",fg="black",bd=2,cursor="hand1")
+        # customer_btn.place(x=1120,y=0,height=40)
 
         # adding images to main frame
         # side image 1
@@ -70,7 +71,6 @@ class HotelManagementSystem():
 
         lblmiddleimg2 = Label(main_frame,image=self.middleimg2,bd=5,relief=RAISED)
         lblmiddleimg2.place(x=300,y=50,width=750,height=600)
-
         # right side images
         side_img3=Image.open("Images\hotel-4.jpg")
         side_img3=side_img3.resize((300,450),Image.ANTIALIAS)
@@ -95,6 +95,18 @@ class HotelManagementSystem():
     def room_booking(self):
         self.room_booking_window=Toplevel(self.root)
         self.application = Room_Booking(self.room_booking_window)
+
+
+    def all_room_details(self):
+        self.room_details_window=Toplevel(self.root)
+        self.application1 = Room_Details(self.room_details_window)
+
+    def about_us_page(self):
+        self.about_us_window=Toplevel(self.root)
+        self.application2 = About_Us(self.about_us_window)
+
+    
+
 
 
 if __name__ == "__main__":
